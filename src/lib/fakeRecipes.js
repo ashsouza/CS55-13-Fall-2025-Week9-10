@@ -8,12 +8,48 @@ import { randomData } from "@/src/lib/randomData.js";
 import { Timestamp } from "firebase/firestore";
 
 export async function generateFakeRecipesAndReviews() {
-  const recipesToAdd = 5;
   const data = [];
 
-  for (let i = 0; i < recipesToAdd; i++) {
-    const recipeTimestamp = Timestamp.fromDate(getRandomDateBefore());
+  // Map recipe names to their correct categories and indices
+  const recipeCategoryMap = {
+    // COOKIES
+    "Chewy Molasses Cookies": { category: "Cookies", index: 0 },
+    "Peanut Blossoms": { category: "Cookies", index: 1 },
+    "Vanishing Oatmeal Cookies": { category: "Cookies", index: 2 },
+    "Peanut Butter Balls": { category: "Cookies", index: 3 },
+    "Chocolate Crackle Cookies": { category: "Cookies", index: 4 },
+    "Chewy Lemon Cookies": { category: "Cookies", index: 5 },
+    "Coconut Cranberry Chews": { category: "Cookies", index: 6 },
+    
+    // CAKES
+    "German's Sweet Chocolate Cake": { category: "Cakes", index: 7 },
+    "Lemon Pound Cake": { category: "Cakes", index: 8 },
+    "Carrot Cake": { category: "Cakes", index: 9 },
+    "Best-Ever Chocolate Cake": { category: "Cakes", index: 10 },
+    
+    // PIES
+    "Strawberry Rhubarb Pie": { category: "Pies", index: 11 },
+    "Good Ol' Fashioned Apple Pie": { category: "Pies", index: 12 },
+    "Perfect Pumpkin Pie": { category: "Pies", index: 13 },
+    
+    // OTHER DESSERTS
+    "Old-Fashioned Bread Pudding": { category: "Other Desserts", index: 14 },
+    "The Original Rice Krispies Treat": { category: "Other Desserts", index: 15 },
+    
+    // BREADS
+    "Banana Bread": { category: "Breads", index: 16 },
+    "Zucchini Almond Bread": { category: "Breads", index: 17 },
+    "Irish Soda Bread": { category: "Breads", index: 18 },
+  };
 
+  // Generate all recipes (not random selection)
+  for (let i = 0; i < randomData.recipeNames.length; i++) {
+    const recipeName = randomData.recipeNames[i];
+    const recipeInfo = recipeCategoryMap[recipeName];
+    
+    if (!recipeInfo) continue; // Skip if recipe not found in map
+
+    const recipeTimestamp = Timestamp.fromDate(getRandomDateBefore());
     const ratingsData = [];
 
     // Generate a random number of ratings/reviews for this recipe
@@ -44,45 +80,9 @@ export async function generateFakeRecipesAndReviews() {
         ) / ratingsData.length
       : 0;
 
-    const recipeIndex = randomNumberBetween(0, randomData.recipeNames.length - 1);
-    const instructionIndex = recipeIndex;
-    const ingredientIndex = recipeIndex;
-
-    // Map recipe names to their correct categories
-    const recipeCategoryMap = {
-      // COOKIES
-      "Chewy Molasses Cookies": "Cookies",
-      "Peanut Blossoms": "Cookies",
-      "Vanishing Oatmeal Cookies": "Cookies",
-      "Peanut Butter Balls": "Cookies",
-      "Chocolate Crackle Cookies": "Cookies",
-      "Chewy Lemon Cookies": "Cookies",
-      "Coconut Cranberry Chews": "Cookies",
-      
-      // CAKES
-      "German's Sweet Chocolate Cake": "Cakes",
-      "Lemon Pound Cake": "Cakes",
-      "Carrot Cake": "Cakes",
-      "Best-Ever Chocolate Cake": "Cakes",
-      
-      // PIES
-      "Strawberry Rhubarb Pie": "Pies",
-      "Good Ol' Fashioned Apple Pie": "Pies",
-      "Perfect Pumpkin Pie": "Pies",
-      
-      // OTHER DESSERTS
-      "Old-Fashioned Bread Pudding": "Other Desserts",
-      "The Original Rice Krispies Treat": "Other Desserts",
-      
-      // BREADS
-      "Banana Bread": "Breads",
-      "Zucchini Almond Bread": "Breads",
-      "Irish Soda Bread": "Breads",
-    };
-
     const recipeData = {
-      category: recipeCategoryMap[randomData.recipeNames[recipeIndex]] || "Other Desserts",
-      name: randomData.recipeNames[recipeIndex],
+      category: recipeInfo.category,
+      name: recipeName,
       avgRating,
       numRatings: ratingsData.length,
       sumRating: ratingsData.reduce(
@@ -92,8 +92,8 @@ export async function generateFakeRecipesAndReviews() {
       difficulty: randomNumberBetween(1, 4), // 1=Easy, 2=Medium, 3=Hard, 4=Expert
       cookingTime: randomNumberBetween(15, 180), // minutes
       servings: randomNumberBetween(2, 8),
-      ingredients: randomData.recipeIngredients[ingredientIndex],
-      instructions: randomData.recipeInstructions[instructionIndex],
+      ingredients: randomData.recipeIngredients[recipeInfo.index],
+      instructions: randomData.recipeInstructions[recipeInfo.index],
       photo: `https://storage.googleapis.com/firestorequickstarts.appspot.com/food_${randomNumberBetween(
         1,
         22
