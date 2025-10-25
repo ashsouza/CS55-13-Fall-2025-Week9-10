@@ -6,11 +6,26 @@ import {
   signOut,
   onIdTokenChanged,
 } from "@/src/lib/firebase/auth.js";
-import { addFakeRestaurantsAndReviews } from "@/src/lib/firebase/firestore.js";
+import { addFakeRecipesAndReviews } from "@/src/lib/firebase/firestore.js";
 import { setCookie, deleteCookie } from "cookies-next";
 
 function useUserSession(initialUser) {
-  return;
+  useEffect(() => {
+    return onIdTokenChanged(async (user) => {
+      if (user) {
+        const idToken = await user.getIdToken();
+        await setCookie("__session", idToken);
+      } else {
+        await deleteCookie("__session");
+      }
+      if (initialUser?.uid === user?.uid) {
+        return;
+      }
+      window.location.reload();
+    });
+  }, [initialUser]);
+
+  return initialUser;
 }
 
 export default function Header({ initialUser }) {
@@ -29,8 +44,8 @@ export default function Header({ initialUser }) {
   return (
     <header>
       <Link href="/" className="logo">
-        <img src="/friendly-eats.svg" alt="FriendlyEats" />
-        Friendly Eats
+        <img src="/friendly-eats.svg" alt="Good Eats with Joanne Waters" />
+        Good Eats with Joanne Waters - The Baking Edition
       </Link>
       {user ? (
         <>
@@ -50,8 +65,8 @@ export default function Header({ initialUser }) {
                 <li>{user.displayName}</li>
 
                 <li>
-                  <a href="#" onClick={addFakeRestaurantsAndReviews}>
-                    Add sample restaurants
+                  <a href="#" onClick={addFakeRecipesAndReviews}>
+                    Add sample recipes
                   </a>
                 </li>
 

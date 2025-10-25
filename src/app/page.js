@@ -1,5 +1,5 @@
-import RestaurantListings from "@/src/components/RestaurantListings.jsx";
-import { getRestaurants } from "@/src/lib/firebase/firestore.js";
+import RecipeListings from "@/src/components/RecipeListings.jsx";
+import { getRecipes } from "@/src/lib/firebase/firestore.js";
 import { getAuthenticatedAppForUser } from "@/src/lib/firebase/serverApp.js";
 import { getFirestore } from "firebase/firestore";
 
@@ -14,16 +14,16 @@ export const dynamic = "force-dynamic";
 export default async function Home(props) {
   const searchParams = await props.searchParams;
   // Using seachParams which Next.js provides, allows the filtering to happen on the server-side, for example:
-  // ?city=London&category=Indian&sort=Review
+  // ?cuisine=Italian&category=Main Course&sort=Rating
   const { firebaseServerApp } = await getAuthenticatedAppForUser();
-  const restaurants = await getRestaurants(
+  const recipes = await getRecipes(
     getFirestore(firebaseServerApp),
     searchParams
   );
   return (
     <main className="main__home">
-      <RestaurantListings
-        initialRestaurants={restaurants}
+      <RecipeListings
+        initialRecipes={recipes}
         searchParams={searchParams}
       />
     </main>

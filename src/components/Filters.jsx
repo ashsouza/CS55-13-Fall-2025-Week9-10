@@ -1,4 +1,4 @@
-// The filters shown on the restaurant listings page
+// The filters shown on the recipe listings page
 
 import Tag from "@/src/components/Tag.jsx";
 
@@ -38,7 +38,7 @@ export default function Filters({ filters, setFilters }) {
         <summary>
           <img src="/filter.svg" alt="filter" />
           <div>
-            <p>Restaurants</p>
+            <p>Recipes</p>
             <p>Sorted by {filters.sort || "Rating"}</p>
           </div>
         </summary>
@@ -54,19 +54,11 @@ export default function Filters({ filters, setFilters }) {
             label="Category"
             options={[
               "",
-              "Italian",
-              "Chinese",
-              "Japanese",
-              "Mexican",
-              "Indian",
-              "Mediterranean",
-              "Caribbean",
-              "Cajun",
-              "German",
-              "Russian",
-              "Cuban",
-              "Organic",
-              "Tapas",
+              "Cookies",
+              "Cakes",
+              "Pies",
+              "Other Desserts",
+              "Breads",
             ]}
             value={filters.category}
             onChange={(event) => handleSelectionChange(event, "category")}
@@ -75,33 +67,11 @@ export default function Filters({ filters, setFilters }) {
           />
 
           <FilterSelect
-            label="City"
-            options={[
-              "",
-              "New York",
-              "Los Angeles",
-              "London",
-              "Paris",
-              "Tokyo",
-              "Mumbai",
-              "Dubai",
-              "Amsterdam",
-              "Seoul",
-              "Singapore",
-              "Istanbul",
-            ]}
-            value={filters.city}
-            onChange={(event) => handleSelectionChange(event, "city")}
-            name="city"
-            icon="/location.svg"
-          />
-
-          <FilterSelect
-            label="Price"
-            options={["", "$", "$$", "$$$", "$$$$"]}
-            value={filters.price}
-            onChange={(event) => handleSelectionChange(event, "price")}
-            name="price"
+            label="Difficulty"
+            options={["", "★", "★★", "★★★", "★★★★"]}
+            value={filters.difficulty}
+            onChange={(event) => handleSelectionChange(event, "difficulty")}
+            name="difficulty"
             icon="/price.svg"
           />
 
@@ -121,9 +91,8 @@ export default function Filters({ filters, setFilters }) {
                 type="reset"
                 onClick={() => {
                   setFilters({
-                    city: "",
                     category: "",
-                    price: "",
+                    difficulty: "",
                     sort: "",
                   });
                 }}

@@ -1,4 +1,4 @@
-import { generateFakeRestaurantsAndReviews } from "@/src/lib/fakeRestaurants.js";
+import { generateFakeRecipesAndReviews } from "@/src/lib/fakeRecipes.js";
 
 import {
   collection,
@@ -18,13 +18,13 @@ import {
 
 import { db } from "@/src/lib/firebase/clientApp";
 
-export async function updateRestaurantImageReference(
-  restaurantId,
+export async function updateRecipeImageReference(
+  recipeId,
   publicImageUrl
 ) {
-  const restaurantRef = doc(collection(db, "restaurants"), restaurantId);
-  if (restaurantRef) {
-    await updateDoc(restaurantRef, { photo: publicImageUrl });
+  const recipeRef = doc(collection(db, "recipes"), recipeId);
+  if (recipeRef) {
+    await updateDoc(recipeRef, { photo: publicImageUrl });
   }
 }
 
@@ -37,7 +37,7 @@ const updateWithRating = async (
   return;
 };
 
-export async function addReviewToRestaurant(db, restaurantId, review) {
+export async function addReviewToRecipe(db, recipeId, review) {
   return;
 }
 
@@ -45,20 +45,20 @@ function applyQueryFilters(q, { category, city, price, sort }) {
   return;
 }
 
-export async function getRestaurants(db = db, filters = {}) {
+export async function getRecipes(db = db, filters = {}) {
   return [];
 }
 
-export function getRestaurantsSnapshot(cb, filters = {}) {
+export function getRecipesSnapshot(cb, filters = {}) {
   return;
 }
 
-export async function getRestaurantById(db, restaurantId) {
-  if (!restaurantId) {
-    console.log("Error: Invalid ID received: ", restaurantId);
+export async function getRecipeById(db, recipeId) {
+  if (!recipeId) {
+    console.log("Error: Invalid ID received: ", recipeId);
     return;
   }
-  const docRef = doc(db, "restaurants", restaurantId);
+  const docRef = doc(db, "recipes", recipeId);
   const docSnap = await getDoc(docRef);
   return {
     ...docSnap.data(),
@@ -66,18 +66,18 @@ export async function getRestaurantById(db, restaurantId) {
   };
 }
 
-export function getRestaurantSnapshotById(restaurantId, cb) {
+export function getRecipeSnapshotById(recipeId, cb) {
   return;
 }
 
-export async function getReviewsByRestaurantId(db, restaurantId) {
-  if (!restaurantId) {
-    console.log("Error: Invalid restaurantId received: ", restaurantId);
+export async function getReviewsByRecipeId(db, recipeId) {
+  if (!recipeId) {
+    console.log("Error: Invalid recipeId received: ", recipeId);
     return;
   }
 
   const q = query(
-    collection(db, "restaurants", restaurantId, "ratings"),
+    collection(db, "recipes", recipeId, "ratings"),
     orderBy("timestamp", "desc")
   );
 
@@ -92,14 +92,14 @@ export async function getReviewsByRestaurantId(db, restaurantId) {
   });
 }
 
-export function getReviewsSnapshotByRestaurantId(restaurantId, cb) {
-  if (!restaurantId) {
-    console.log("Error: Invalid restaurantId received: ", restaurantId);
+export function getReviewsSnapshotByRecipeId(recipeId, cb) {
+  if (!recipeId) {
+    console.log("Error: Invalid recipeId received: ", recipeId);
     return;
   }
 
   const q = query(
-    collection(db, "restaurants", restaurantId, "ratings"),
+    collection(db, "recipes", recipeId, "ratings"),
     orderBy("timestamp", "desc")
   );
   return onSnapshot(q, (querySnapshot) => {
@@ -115,18 +115,18 @@ export function getReviewsSnapshotByRestaurantId(restaurantId, cb) {
   });
 }
 
-export async function addFakeRestaurantsAndReviews() {
-  const data = await generateFakeRestaurantsAndReviews();
-  for (const { restaurantData, ratingsData } of data) {
+export async function addFakeRecipesAndReviews() {
+  const data = await generateFakeRecipesAndReviews();
+  for (const { recipeData, ratingsData } of data) {
     try {
       const docRef = await addDoc(
-        collection(db, "restaurants"),
-        restaurantData
+        collection(db, "recipes"),
+        recipeData
       );
 
       for (const ratingData of ratingsData) {
         await addDoc(
-          collection(db, "restaurants", docRef.id, "ratings"),
+          collection(db, "recipes", docRef.id, "ratings"),
           ratingData
         );
       }
@@ -134,5 +134,35 @@ export async function addFakeRestaurantsAndReviews() {
       console.log("There was an error adding the document");
       console.error("Error adding document: ", e);
     }
+  }
+}
+
+// Add a new recipe to Firestore
+export async function addNewRecipe(recipeData) {
+  try {
+    const recipeWithTimestamp = {
+      ...recipeData,
+      avgRating: 0,
+      numRatings: 0,
+      sumRating: 0,
+      timestamp: Timestamp.now(),
+    };
+
+    const docRef = await addDoc(collection(db, "recipes"), recipeWithTimestamp);
+    return docRef.id;
+  } catch (error) {
+    console.error("Error adding new recipe:", error);
+    throw error;
+  }
+}
+
+// Update an existing recipe
+export async function updateRecipe(recipeId, updateData) {
+  try {
+    const recipeRef = doc(collection(db, "recipes"), recipeId);
+    await updateDoc(recipeRef, updateData);
+  } catch (error) {
+    console.error("Error updating recipe:", error);
+    throw error;
   }
 }

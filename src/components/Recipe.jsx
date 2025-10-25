@@ -1,24 +1,24 @@
 "use client";
 
-// This components shows one individual restaurant
-// It receives data from src/app/restaurant/[id]/page.jsx
+// This components shows one individual recipe
+// It receives data from src/app/recipe/[id]/page.jsx
 
 import { React, useState, useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
-import { getRestaurantSnapshotById } from "@/src/lib/firebase/firestore.js";
+import { getRecipeSnapshotById } from "@/src/lib/firebase/firestore.js";
 import { useUser } from "@/src/lib/getUser";
-import RestaurantDetails from "@/src/components/RestaurantDetails.jsx";
-import { updateRestaurantImage } from "@/src/lib/firebase/storage.js";
+import RecipeDetails from "@/src/components/RecipeDetails.jsx";
+import { updateRecipeImage } from "@/src/lib/firebase/storage.js";
 
 const ReviewDialog = dynamic(() => import("@/src/components/ReviewDialog.jsx"));
 
-export default function Restaurant({
+export default function Recipe({
   id,
-  initialRestaurant,
+  initialRecipe,
   initialUserId,
   children,
 }) {
-  const [restaurantDetails, setRestaurantDetails] = useState(initialRestaurant);
+  const [recipeDetails, setRecipeDetails] = useState(initialRecipe);
   const [isOpen, setIsOpen] = useState(false);
 
   // The only reason this component needs to know the user ID is to associate a review with the user, and to know whether to show the review dialog
@@ -32,14 +32,14 @@ export default function Restaurant({
     setReview({ ...review, [name]: value });
   };
 
-  async function handleRestaurantImage(target) {
+  async function handleRecipeImage(target) {
     const image = target.files ? target.files[0] : null;
     if (!image) {
       return;
     }
 
-    const imageURL = await updateRestaurantImage(id, image);
-    setRestaurantDetails({ ...restaurantDetails, photo: imageURL });
+    const imageURL = await updateRecipeImage(id, image);
+    setRecipeDetails({ ...recipeDetails, photo: imageURL });
   }
 
   const handleClose = () => {
@@ -48,22 +48,22 @@ export default function Restaurant({
   };
 
   useEffect(() => {
-    return getRestaurantSnapshotById(id, (data) => {
-      setRestaurantDetails(data);
+    return getRecipeSnapshotById(id, (data) => {
+      setRecipeDetails(data);
     });
   }, [id]);
 
   return (
     <>
-      <RestaurantDetails
-        restaurant={restaurantDetails}
+      <RecipeDetails
+        recipe={recipeDetails}
         userId={userId}
-        handleRestaurantImage={handleRestaurantImage}
+        handleRecipeImage={handleRecipeImage}
         setIsOpen={setIsOpen}
         isOpen={isOpen}
       >
         {children}
-      </RestaurantDetails>
+      </RecipeDetails>
       {userId && (
         <Suspense fallback={<p>Loading...</p>}>
           <ReviewDialog

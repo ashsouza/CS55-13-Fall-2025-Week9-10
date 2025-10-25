@@ -44,6 +44,9 @@ export async function generateFakeRecipesAndReviews() {
         ) / ratingsData.length
       : 0;
 
+    const instructionIndex = randomNumberBetween(0, randomData.recipeInstructions.length - 1);
+    const ingredientIndex = randomNumberBetween(0, randomData.recipeIngredients.length - 1);
+
     const recipeData = {
       category:
         randomData.recipeCategories[
@@ -53,9 +56,6 @@ export async function generateFakeRecipesAndReviews() {
         randomNumberBetween(0, randomData.recipeNames.length - 1)
       ],
       avgRating,
-      cuisine: randomData.recipeCuisines[
-        randomNumberBetween(0, randomData.recipeCuisines.length - 1)
-      ],
       numRatings: ratingsData.length,
       sumRating: ratingsData.reduce(
         (accumulator, currentValue) => accumulator + currentValue.rating,
@@ -64,6 +64,8 @@ export async function generateFakeRecipesAndReviews() {
       difficulty: randomNumberBetween(1, 4), // 1=Easy, 2=Medium, 3=Hard, 4=Expert
       cookingTime: randomNumberBetween(15, 180), // minutes
       servings: randomNumberBetween(2, 8),
+      ingredients: randomData.recipeIngredients[ingredientIndex],
+      instructions: randomData.recipeInstructions[instructionIndex],
       photo: `https://storage.googleapis.com/firestorequickstarts.appspot.com/food_${randomNumberBetween(
         1,
         22

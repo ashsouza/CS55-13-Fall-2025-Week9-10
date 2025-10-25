@@ -1,19 +1,20 @@
-// This component shows restaurant metadata, and offers some actions to the user like uploading a new restaurant image, and adding a review.
+// This component shows recipe metadata, and offers some actions to the user like uploading a new recipe image, and adding a review.
 
 import React from "react";
 import renderStars from "@/src/components/Stars.jsx";
+import RecipeInstructions from "@/src/components/RecipeInstructions.jsx";
 
-const RestaurantDetails = ({
-  restaurant,
+const RecipeDetails = ({
+  recipe,
   userId,
-  handleRestaurantImage,
+  handleRecipeImage,
   setIsOpen,
   isOpen,
   children,
 }) => {
   return (
     <section className="img__section">
-      <img src={restaurant.photo} alt={restaurant.name} />
+      <img src={recipe.photo} alt={recipe.name} />
 
       <div className="actions">
         {userId && (
@@ -27,7 +28,7 @@ const RestaurantDetails = ({
           />
         )}
         <label
-          onChange={(event) => handleRestaurantImage(event.target)}
+          onChange={(event) => handleRecipeImage(event.target)}
           htmlFor="upload-image"
           className="add"
         >
@@ -44,23 +45,28 @@ const RestaurantDetails = ({
 
       <div className="details__container">
         <div className="details">
-          <h2>{restaurant.name}</h2>
+          <h2>{recipe.name}</h2>
 
-          <div className="restaurant__rating">
-            <ul>{renderStars(restaurant.avgRating)}</ul>
+          <div className="recipe__rating">
+            <ul>{renderStars(recipe.avgRating)}</ul>
 
-            <span>({restaurant.numRatings})</span>
+            <span>({recipe.numRatings})</span>
           </div>
 
           <p>
-            {restaurant.category} | {restaurant.city}
+            {recipe.category}
           </p>
-          <p>{"$".repeat(restaurant.price)}</p>
+          <p>
+            {recipe.cookingTime} minutes | {recipe.servings} servings
+          </p>
+          <p>Difficulty: {"★".repeat(recipe.difficulty)}</p>
           {children}
         </div>
       </div>
+      
+      <RecipeInstructions recipe={recipe} />
     </section>
   );
 };
 
-export default RestaurantDetails;
+export default RecipeDetails;
