@@ -41,16 +41,51 @@ export async function addReviewToRecipe(db, recipeId, review) {
   return;
 }
 
-function applyQueryFilters(q, { category, city, price, sort }) {
-  return;
+function applyQueryFilters(q, { category, difficulty, sort }) {
+  if (category) {
+    q = query(q, where("category", "==", category));
+  }
+  if (difficulty) {
+    q = query(q, where("difficulty", "==", difficulty.length));
+  }
+  if (sort === "Rating" || !sort) {
+    q = query(q, orderBy("avgRating", "desc"));
+  } else if (sort === "Review") {
+    q = query(q, orderBy("numRatings", "desc"));
+  }
+  return q;
 }
 
 export async function getRecipes(db = db, filters = {}) {
-  return [];
+  let q = query(collection(db, "recipes"));
+
+  q = applyQueryFilters(q, filters);
+  const results = await getDocs(q);
+  return results.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data(),
+      // Only plain objects can be passed to Client Components from Server Components
+      timestamp: doc.data().timestamp.toDate(),
+    };
+  });
 }
 
 export function getRecipesSnapshot(cb, filters = {}) {
-  return;
+  let q = query(collection(db, "recipes"));
+  
+  q = applyQueryFilters(q, filters);
+  return onSnapshot(q, (querySnapshot) => {
+    const results = querySnapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+        // Only plain objects can be passed to Client Components from Server Components
+        timestamp: doc.data().timestamp.toDate(),
+      };
+    });
+    cb(results);
+  });
 }
 
 export async function getRecipeById(db, recipeId) {
