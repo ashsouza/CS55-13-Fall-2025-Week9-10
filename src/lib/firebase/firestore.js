@@ -72,9 +72,14 @@ export async function getRecipes(db = db, filters = {}) {
 }
 
 export function getRecipesSnapshot(cb, filters = {}) {
+  if (typeof cb !== "function") {
+    console.log("Error: The callback parameter is not a function");
+    return;
+  }
+
   let q = query(collection(db, "recipes"));
-  
   q = applyQueryFilters(q, filters);
+
   return onSnapshot(q, (querySnapshot) => {
     const results = querySnapshot.docs.map((doc) => {
       return {
@@ -84,6 +89,7 @@ export function getRecipesSnapshot(cb, filters = {}) {
         timestamp: doc.data().timestamp.toDate(),
       };
     });
+
     cb(results);
   });
 }
