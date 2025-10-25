@@ -44,17 +44,45 @@ export async function generateFakeRecipesAndReviews() {
         ) / ratingsData.length
       : 0;
 
-    const instructionIndex = randomNumberBetween(0, randomData.recipeInstructions.length - 1);
-    const ingredientIndex = randomNumberBetween(0, randomData.recipeIngredients.length - 1);
+    const recipeIndex = randomNumberBetween(0, randomData.recipeNames.length - 1);
+    const instructionIndex = recipeIndex;
+    const ingredientIndex = recipeIndex;
+
+    // Map recipe names to their correct categories
+    const recipeCategoryMap = {
+      // COOKIES
+      "Chewy Molasses Cookies": "Cookies",
+      "Peanut Blossoms": "Cookies",
+      "Vanishing Oatmeal Cookies": "Cookies",
+      "Peanut Butter Balls": "Cookies",
+      "Chocolate Crackle Cookies": "Cookies",
+      "Chewy Lemon Cookies": "Cookies",
+      "Coconut Cranberry Chews": "Cookies",
+      
+      // CAKES
+      "German's Sweet Chocolate Cake": "Cakes",
+      "Lemon Pound Cake": "Cakes",
+      "Carrot Cake": "Cakes",
+      "Best-Ever Chocolate Cake": "Cakes",
+      
+      // PIES
+      "Strawberry Rhubarb Pie": "Pies",
+      "Good Ol' Fashioned Apple Pie": "Pies",
+      "Perfect Pumpkin Pie": "Pies",
+      
+      // OTHER DESSERTS
+      "Old-Fashioned Bread Pudding": "Other Desserts",
+      "The Original Rice Krispies Treat": "Other Desserts",
+      
+      // BREADS
+      "Banana Bread": "Breads",
+      "Zucchini Almond Bread": "Breads",
+      "Irish Soda Bread": "Breads",
+    };
 
     const recipeData = {
-      category:
-        randomData.recipeCategories[
-          randomNumberBetween(0, randomData.recipeCategories.length - 1)
-        ],
-      name: randomData.recipeNames[
-        randomNumberBetween(0, randomData.recipeNames.length - 1)
-      ],
+      category: recipeCategoryMap[randomData.recipeNames[recipeIndex]] || "Other Desserts",
+      name: randomData.recipeNames[recipeIndex],
       avgRating,
       numRatings: ratingsData.length,
       sumRating: ratingsData.reduce(
