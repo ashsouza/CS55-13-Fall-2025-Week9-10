@@ -299,7 +299,9 @@ a {
   border-radius: 8px;
   clear: both;
   position: relative;
-  z-index: 0;
+  z-index: 10;
+  display: block;
+  width: 100%;
 }
 
 .recipe__ingredients,
