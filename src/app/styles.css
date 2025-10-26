@@ -97,7 +97,7 @@ footer {
 }
 
 header {
-  background-color: rgb(87, 94, 109);
+  background-color: rgb(201, 103, 171);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -296,7 +296,7 @@ a {
 }
 
 .recipe__instructions {
-  margin-top: 0;
+  margin-top: 30px;
   padding: 30px 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
@@ -342,12 +342,14 @@ a {
 
 .img__section {
   width: 100%;
+  height: 400px;
   position: relative;
   > img {
     width: 100%;
-    height: 400px;
+    height: 100%;
     object-fit: cover;
-    display: block;
+    position: absolute;
+    max-width: unset;
   }
 }
 
@@ -372,18 +374,22 @@ a {
   left: 0;
   right: 0;
   width: 100%;
-  height: 100%;
+  background: rgb(24 25 26 / 50%);
 }
 
 .reviews {
   & .review__item {
     padding: 40px;
     border-bottom: 1px solid rgb(156 163 175 / 0.25);
-  }
-
-  & time {
-    font-size: 0.8rem;
-    color: darkgrey;
+    
+    .restaurant__rating {
+      margin-bottom: 10px;
+      
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
   }
 }
 
@@ -510,6 +516,7 @@ a {
     gold var(--percent),
     rgba(0, 0, 0, 0.2) var(--percent)
   );
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
