@@ -23,21 +23,21 @@ export default function ReviewsListClient({
       </h3>
       <ul className="reviews">
         {reviews.length > 0 ? (
-          <ul>
-            {reviews.map((review) => (
-              <Review
-                key={review.id}
-                rating={review.rating}
-                text={review.text}
-                timestamp={review.timestamp}
-              />
-            ))}
-          </ul>
+          reviews.map((review) => (
+            <Review
+              key={review.id}
+              rating={review.rating}
+              text={review.text}
+              timestamp={review.timestamp}
+            />
+          ))
         ) : (
-          <p>
-            This recipe has not been reviewed yet,{" "}
-            {!userId ? "first login and then" : ""} add your own review!
-          </p>
+          <li>
+            <p>
+              This recipe has not been reviewed yet,{" "}
+              {!userId ? "first login and then" : ""} add your own review!
+            </p>
+          </li>
         )}
       </ul>
     </article>
