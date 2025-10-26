@@ -296,11 +296,13 @@ a {
 }
 
 .recipe__instructions {
-  margin-top: 30px;
+  margin-top: 60px;
   padding: 30px 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
   clear: both;
+  position: relative;
+  z-index: 0;
 }
 
 .recipe__ingredients,
@@ -344,6 +346,7 @@ a {
   width: 100%;
   height: 400px;
   position: relative;
+  margin-bottom: 20px;
   > img {
     width: 100%;
     height: 100%;
@@ -375,20 +378,44 @@ a {
   right: 0;
   width: 100%;
   background: rgb(24 25 26 / 50%);
+  padding-bottom: 20px;
 }
 
 .reviews {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  
   & .review__item {
-    padding: 40px;
+    padding: 20px;
     border-bottom: 1px solid rgb(156 163 175 / 0.25);
+    
+    &:last-child {
+      border-bottom: none;
+    }
     
     .restaurant__rating {
       margin-bottom: 10px;
+      display: flex;
+      flex-direction: row;
+      gap: 2px;
       
       svg {
         width: 12px;
         height: 12px;
       }
+    }
+    
+    p {
+      margin: 10px 0;
+      line-height: 1.5;
+    }
+    
+    time {
+      font-size: 0.8rem;
+      color: #666;
+      font-style: italic;
     }
   }
 }
@@ -396,11 +423,12 @@ a {
 .actions {
   position: absolute;
   z-index: 1;
-  bottom: -30px;
-
+  bottom: -40px;
   right: 0;
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
+  padding: 10px;
   & img {
     height: 2.5rem;
   }
@@ -438,7 +466,7 @@ a {
   }
 
   :where(.review, .add) {
-    margin: 0 15px;
+    margin: 0 5px;
   }
 }
 
@@ -560,6 +588,7 @@ a {
   & img {
     height: 4rem;
     max-width: 100%;
+    padding-bottom: 10px;
   }
 
   & form div {

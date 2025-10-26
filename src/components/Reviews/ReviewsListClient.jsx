@@ -18,6 +18,9 @@ export default function ReviewsListClient({
   }, [recipeId]);
   return (
     <article>
+      <h3 style={{ marginBottom: '20px', color: '#2c3e50', fontSize: '1.5em' }}>
+        Reviews ({reviews.length})
+      </h3>
       <ul className="reviews">
         {reviews.length > 0 ? (
           <ul>
